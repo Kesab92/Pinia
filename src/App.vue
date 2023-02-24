@@ -1,36 +1,30 @@
 
 
 <template>
-  <header>
-    <img src="./assets/logo.svg" />
-    
     <!--new task form-->
-    
     <TaskForm />
     <!-- filter -->
-    
     <nav>
       <button class="s-Button" @click="filter = 'all' ">All</button>
       <button class="s-Button" @click="filter = 'favs' ">Favs</button>
+      <button class="s-Button" @click="taskStore.$reset">Reset</button>
     </nav>
-
-    <!--task lsits-->
-
-    <div v-if="filter === 'all'">
-      <p>You have {{ taskStore.totalCount }} tasks left to do</p>
-      <p class="s-Tasks">All tasks</p>
-      <div v-for="task in taskStore.tasks">
-      <TaskDetails :task="task" />
-      </div>
-    </div>
-    <div v-if="filter === 'favs'">
-      <p>You have {{ taskStore.favCount }} favs left to do</p>
-      <p class="s-Tasks">Favs tasks</p>
-      <div v-for="task in taskStore.favs">
+    <!-- loading -->
+      <!--task lsits-->
+      <div v-if="filter === 'all'">
+        <p>You have {{ taskStore.totalCount }} tasks left to do</p>
+        <p class="s-Tasks">All tasks</p>
+        <div v-for="task in taskStore.tasks">
         <TaskDetails :task="task" />
+        </div>
       </div>
-    </div>
-  </header>
+      <div v-if="filter === 'favs'">
+        <p>You have {{ taskStore.favCount }} favs left to do</p>
+        <p class="s-Tasks">Favs tasks</p>
+        <div v-for="task in taskStore.favs">
+          <TaskDetails :task="task" />
+        </div>
+      </div>
 </template>
 
 <script setup>
@@ -39,9 +33,17 @@ import { RouterLink, RouterView } from 'vue-router'
 import { useTaskStore } from './stores/TaskStore'
 import  TaskDetails  from './components/TaskDetails.vue'
 import  TaskForm from './components/TaskForm.vue'
+
 const taskStore = useTaskStore()
 
-const filter = ref('all');
+const filter = ref('all')
+
+const { tasks, loaading, favs, totalCount, favCount } = storeToTefs(taskStore)
+
+//fetch
+taskStore.getTasks()
+
+
 
 </script>
 
